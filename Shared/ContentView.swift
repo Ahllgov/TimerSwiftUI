@@ -45,7 +45,7 @@ struct ContentView: View {
                 VStack(spacing: 10) {
                     Text("\(data.selectedTime)")
                         .foregroundColor(.white)
-                        .font(.system(size: 70, weight: .thin))
+                        .font(.system(size: 150, weight: .thin))
                 }
             }
             .frame(width: UIScreen.main.bounds.width - 25, height: UIScreen.main.bounds.width)
@@ -65,7 +65,7 @@ struct ContentView: View {
                     Button {
                         data.buttonAnimation.toggle()
                     } label: {
-                        Text("Старт")
+                        Text(data.buttonAnimation == true ? "Пауза" : "Старт")
                             .foregroundColor(Color(#colorLiteral(red: 0.9848656058, green: 0.6185280681, blue: 0.03652171046, alpha: 1)))
                             .background(Color(#colorLiteral(red: 0.9848656058, green: 0.6185280681, blue: 0.03652171046, alpha: 1)).opacity(0.3).frame(width: 70, height: 70).clipShape(Circle())
                                             .overlay(Circle()
@@ -95,7 +95,7 @@ struct ContentView: View {
                             .lineLimit(1)
                             .frame(width: 80, height: 80)
                         //Changing color for selected ones
-                            .background(data.time == time ? Color.green.opacity(0.3): Color.white.opacity(0.3))
+                            .background(data.time == time ? Color.green.opacity(0.3): Color.white.opacity(0.1))
                             .shadow(color: .black, radius: 3, y: 3)
                             .clipShape(Circle())
                             .onTapGesture {
