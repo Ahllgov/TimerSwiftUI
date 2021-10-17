@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		702F7010271CBB45009A2931 /* TimerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 702F700F271CBB45009A2931 /* TimerViewModel.swift */; };
 		70865516271A18F70040C907 /* TimerSwiftUI.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 70865503271A18F60040C907 /* TimerSwiftUI.xcdatamodeld */; };
 		70865517271A18F70040C907 /* TimerSwiftUI.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 70865503271A18F60040C907 /* TimerSwiftUI.xcdatamodeld */; };
 		70865518271A18F70040C907 /* TimerSwiftUIApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70865505271A18F60040C907 /* TimerSwiftUIApp.swift */; };
@@ -20,6 +21,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		702F700F271CBB45009A2931 /* TimerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerViewModel.swift; sourceTree = "<group>"; };
 		70865504271A18F60040C907 /* Shared.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Shared.xcdatamodel; sourceTree = "<group>"; };
 		70865505271A18F60040C907 /* TimerSwiftUIApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerSwiftUIApp.swift; sourceTree = "<group>"; };
 		70865506271A18F60040C907 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -61,6 +63,7 @@
 			isa = PBXGroup;
 			children = (
 				70865505271A18F60040C907 /* TimerSwiftUIApp.swift */,
+				702F700F271CBB45009A2931 /* TimerViewModel.swift */,
 				70865506271A18F60040C907 /* ContentView.swift */,
 				70865507271A18F60040C907 /* Persistence.swift */,
 				70865508271A18F70040C907 /* Assets.xcassets */,
@@ -184,6 +187,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				702F7010271CBB45009A2931 /* TimerViewModel.swift in Sources */,
 				70865516271A18F70040C907 /* TimerSwiftUI.xcdatamodeld in Sources */,
 				7086551C271A18F70040C907 /* Persistence.swift in Sources */,
 				70865518271A18F70040C907 /* TimerSwiftUIApp.swift in Sources */,

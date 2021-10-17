@@ -9,80 +9,112 @@ import SwiftUI
 import CoreData
 
 struct ContentView: View {
-    @Environment(\.managedObjectContext) private var viewContext
-
-    @FetchRequest(
-        sortDescriptors: [NSSortDescriptor(keyPath: \Item.timestamp, ascending: true)],
-        animation: .default)
-    private var items: FetchedResults<Item>
-
+    @StateObject var data = TimerData()
     var body: some View {
-        NavigationView {
-            List {
-                ForEach(items) { item in
-                    NavigationLink(destination: Text("Item at \(item.timestamp!, formatter: itemFormatter)")) {
-                        Text(item.timestamp!, formatter: itemFormatter)
+        ScrollView {
+            ZStack {
+                Circle()
+                    .stroke(Color.gray.opacity(0.5), lineWidth: 7)
+                    .padding()
+                Circle()
+                    .trim(from: 0, to: data.timerHeightChange)
+                    .stroke(Color(#colorLiteral(red: 0.9848656058, green: 0.6185280681, blue: 0.03652171046, alpha: 1)), style: StrokeStyle(lineWidth: 7, lineCap: .round, lineJoin: .round))
+                    .rotationEffect(.degrees(-90))
+                    .padding()
+                    .onReceive(Timer.publish(every: 1, on: .main, in: .common).autoconnect()) { _ in
+                        //Conditions
+                        if data.time != 0 && data.selectedTime != 0 && data.buttonAnimation{
+                            data.selectedTime -= 1
+                            //Updating height
+                            let progessHeight =  1 / CGFloat(data.time)
+                            let diff = data.time - data.selectedTime
+                            withAnimation(.default) {
+                                data.timerHeightChange = CGFloat(diff) * progessHeight
+                            }
+                            if data.selectedTime == 0 {
+                                //Resetting
+                                withAnimation(.default) {
+                                    data.time = 0
+                                    data.selectedTime = 0
+                                    data.timerHeightChange = 0
+                                    data.buttonAnimation = false
+                                }
+                            }
+                        }
+                    }
+                VStack(spacing: 10) {
+                    Text("\(data.selectedTime)")
+                        .foregroundColor(.white)
+                        .font(.system(size: 70, weight: .thin))
+                }
+            }
+            .frame(width: UIScreen.main.bounds.width - 25, height: UIScreen.main.bounds.width)
+            VStack(spacing: 35) {
+                HStack {
+                    Button {
+                        
+                    } label: {
+                        Text("Отмена")
+                            .foregroundColor(.white)
+                            .background(Color.gray.opacity(0.3).frame(width: 70, height: 70).clipShape(Circle())
+                                            .overlay(Circle()
+                                                        .stroke(Color.gray.opacity(0.3), lineWidth: 2)
+                                                        .frame(width: 74, height: 74)))
+                    }
+                    Spacer()
+                    Button {
+                        data.buttonAnimation.toggle()
+                    } label: {
+                        Text("Старт")
+                            .foregroundColor(Color(#colorLiteral(red: 0.9848656058, green: 0.6185280681, blue: 0.03652171046, alpha: 1)))
+                            .background(Color(#colorLiteral(red: 0.9848656058, green: 0.6185280681, blue: 0.03652171046, alpha: 1)).opacity(0.3).frame(width: 70, height: 70).clipShape(Circle())
+                                            .overlay(Circle()
+                                                        .stroke(Color(#colorLiteral(red: 0.9848656058, green: 0.6185280681, blue: 0.03652171046, alpha: 1)).opacity(0.3), lineWidth: 2)
+                                                        .frame(width: 74, height: 74)))
                     }
                 }
-                .onDelete(perform: deleteItems)
-            }
-            .toolbar {
-#if os(iOS)
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    EditButton()
+                .padding(.horizontal)
+                .offset(x: -3, y: -30)
+                HStack {
+                    Text("По окончании")
+                        .foregroundColor(.white)
+                    Spacer()
+                    Text("Радар")
+                        .foregroundColor(.gray)
                 }
-#endif
-                ToolbarItem {
-                    Button(action: addItem) {
-                        Label("Add Item", systemImage: "plus")
+                .padding()
+                .background(Color.gray.opacity(0.3))
+                .cornerRadius(10)
+                .padding(.horizontal,5)
+                LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: -80), count: 3), spacing: 25) {
+                    ForEach(1..<7) { i in
+                        let time = i * 15
+                        Text("\(time)")
+                            .font(.system(size: 40, weight: .light))
+                            .foregroundColor(.white)
+                            .lineLimit(1)
+                            .frame(width: 80, height: 80)
+                        //Changing color for selected ones
+                            .background(data.time == time ? Color.green.opacity(0.3): Color.white.opacity(0.3))
+                            .shadow(color: .black, radius: 3, y: 3)
+                            .clipShape(Circle())
+                            .onTapGesture {
+                                withAnimation {
+                                    data.time = time
+                                    data.selectedTime = time
+                                }
+                            }
                     }
                 }
+                .background(Color.gray.opacity(0.3).cornerRadius(25).padding(.vertical, -15).padding(.horizontal, 5))
             }
-            Text("Select an item")
-        }
-    }
-
-    private func addItem() {
-        withAnimation {
-            let newItem = Item(context: viewContext)
-            newItem.timestamp = Date()
-
-            do {
-                try viewContext.save()
-            } catch {
-                // Replace this implementation with code to handle the error appropriately.
-                // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
-                let nsError = error as NSError
-                fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
-            }
-        }
-    }
-
-    private func deleteItems(offsets: IndexSet) {
-        withAnimation {
-            offsets.map { items[$0] }.forEach(viewContext.delete)
-
-            do {
-                try viewContext.save()
-            } catch {
-                // Replace this implementation with code to handle the error appropriately.
-                // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
-                let nsError = error as NSError
-                fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
-            }
-        }
+        }.background(Color.black.ignoresSafeArea())
     }
 }
-
-private let itemFormatter: DateFormatter = {
-    let formatter = DateFormatter()
-    formatter.dateStyle = .short
-    formatter.timeStyle = .medium
-    return formatter
-}()
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView().environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
+        ContentView()
     }
 }
+
